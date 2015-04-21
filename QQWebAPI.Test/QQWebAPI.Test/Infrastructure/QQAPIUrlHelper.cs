@@ -14,14 +14,15 @@ namespace QQWebAPI.Test.Infrastructure
         private static readonly string urlBase = "https://openapi.b.qq.com/";
         private static readonly int appID = Int32.Parse(ConfigurationManager.AppSettings["APPID"]);
         private static readonly string appSecret = ConfigurationManager.AppSettings["APPSecret"];
-        private static readonly string redirectUri = ConfigurationManager.AppSettings["RedirectUri"];
+        private static readonly string companyRedirectUri = ConfigurationManager.AppSettings["CompanyRedirectUri"];
+        private static readonly string userLoginRedirectUri = ConfigurationManager.AppSettings["UserRedirectUri"];
         private static GetOauthParams oauthParams;
         
-        public string GetOauthUrl(string code,string state)
+        public string GetCompanyOauthUrl(string code,string state)
         {
             if (oauthParams == null)
             {
-                oauthParams = new GetOauthParams(appID,appSecret,"","",redirectUri);
+                oauthParams = new GetOauthParams(appID, appSecret, code, state, companyRedirectUri);
             }
             oauthParams.Code = code;
             oauthParams.State = state;
@@ -32,9 +33,27 @@ namespace QQWebAPI.Test.Infrastructure
             return oauthBaseUrl;
         }
 
-        public string GetRequestUrl()
+        public string GetUserLoginUrl(string state)
         {
-            return "";
+
+            string oauthBaseUrl = urlBase +
+                                  "oauth2/authorize?response_type={0}&app_id={1}&state={2}&redirect_uri={3}&ui={4}";
+            oauthBaseUrl = string.Format(oauthBaseUrl, "code", appID, state, userLoginRedirectUri, "web");
+            return oauthBaseUrl;
         }
+
+        public string GetUserOauthTokenUrl(string code, string state)
+        {
+            string oauthBaseUrl = urlBase +
+                                  "oauth2/token?grant_type={0}&app_id={1}&app_secret={2}&code={3}&state={4}&redirect_uri={5}";
+            oauthBaseUrl = string.Format(oauthBaseUrl, "authorization_code", appID,appSecret,code, state, userLoginRedirectUri);
+            return oauthBaseUrl;
+        }
+
+        public string RefreshUserTokenUrl(string refreshToken)
+        {
+            throw new NotImplementedException();
+        }
+       
     }
 }

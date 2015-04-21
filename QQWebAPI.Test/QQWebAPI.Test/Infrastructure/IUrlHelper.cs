@@ -11,7 +11,10 @@ namespace QQWebAPI.Test.Infrastructure
     public interface IUrlHelper
     {
         
-        string GetOauthUrl(string code,string state);
-        string GetRequestUrl();
+        string GetCompanyOauthUrl(string code,string state);
+        string GetUserLoginUrl(string state);
+        string GetUserOauthTokenUrl(string code,string state);
+        string RefreshUserTokenUrl(string refreshToken);
+
     }
 }

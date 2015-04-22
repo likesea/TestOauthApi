@@ -33,6 +33,7 @@ namespace QQWebAPI.Test.Infrastructure
         private void AddBindings()
         {
             kernel.Bind<IUrlHelper>().To<QQAPIUrlHelper>();
+            kernel.Bind<IProxy>().To<Proxy>();
         }
     }
 }
